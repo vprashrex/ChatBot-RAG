@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Data Table</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 3px solid #ddd;
+            padding: 8px;
+            max-width: 200px; 
+            height:10px; 
+        }
+        th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+        pre {
+            white-space: pre-wrap; /* Wraps the text inside pre */
+            word-wrap: break-word; /* Breaks long words */
+            margin: 0; /* Remove default margin */
+        }
+    
+    </style>
+</head>
+<body>
+    <div class="toggle-btn" style="display: flex;">
+        <button class="btn-submit">CHAT</button>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Response</th>
+                <th>Source</th>
+                <th>Citations</th>
+            </tr>
+        </thead>
+        <tbody id="data-table-body">
+        </tbody>
+    </table>
+
+    
+
+    <script>
+        async function fetchData() {
+            const requestOptions = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            };
+            try {
+                const response = await fetch('/fetch_response', requestOptions);
+                const data = await response.json();
+                const tableBody = document.getElementById('data-table-body');
+                tableBody.innerHTML = '';  // Clear the table body
+
+                data.response.forEach((responseItem, index) => {
+                    const row = document.createElement('tr');
+
+                    // Create Response cell
+                    const responseCell = document.createElement('td');
+                    responseCell.textContent = responseItem;
+                    row.appendChild(responseCell);
+
+                    // Create Source cell and format the JSON
+                    const sourceCell = document.createElement('td');
+                    const sourceData = data.source[index];
+                    const formattedSource = JSON.stringify(sourceData, null, 2);
+                    const preElement = document.createElement('pre');
+                    preElement.textContent = formattedSource;
+                    sourceCell.appendChild(preElement);
+                    row.appendChild(sourceCell);
+
+                    // Create Citations cell and format the JSON
+                    const citationsCell = document.createElement('td');
+                    const citationsData = data.citations[index];
+                    const formattedCitations = JSON.stringify(citationsData, null, 2);
+                    const preCitationsElement = document.createElement('pre');
+                    preCitationsElement.textContent = formattedCitations;
+                    citationsCell.appendChild(preCitationsElement);
+                    row.appendChild(citationsCell);
+
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        fetchData();
+    </script>
+</body>
+
+</html>
