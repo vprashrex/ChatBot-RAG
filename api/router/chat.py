@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-#from api.pipeline import model_api
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 from fastapi.responses import StreamingResponse
@@ -31,7 +30,7 @@ async def generate_word(prompt: str):
             loop = asyncio.get_event_loop()
             future = loop.run_in_executor(None, model.create_context_processor, prompt)
             gen_word = await asyncio.wait_for(future, 12000)
-            for word in gen_word:
+            for word in gen_word.response_gen:
                 await asyncio.sleep(0.01)
                 yield word
 

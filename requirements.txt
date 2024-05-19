@@ -2,3 +2,13 @@ llama-index-core
 llama-index-readers-file 
 llama-index-embeddings-huggingface
 llama-index-readers-json
+aiohttp
+annotated-types
+fastapi
+fastapi-users
+gunicorn
+httpx
+Jinja2
+pydantic
+python-multipart
+uvicorn

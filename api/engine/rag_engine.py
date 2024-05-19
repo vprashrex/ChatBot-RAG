@@ -1,9 +1,13 @@
+# FAKE LLM BASED RAG_ENGINE TO PROVIDE A BRIEF OVERVIEW HOW RAG WILL WORK ON THE GO
+
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.core import Settings, VectorStoreIndex
 from llama_index.core.retrievers import VectorIndexRetriever
 from llama_index.core.query_engine import RetrieverQueryEngine
 from llama_index.core.postprocessor import SimilarityPostprocessor
 from llama_index.readers.json import JSONReader
+from llama_index.core import get_response_synthesizer
+
 
 class RagEngine():
     def __init__(self):
@@ -17,22 +21,21 @@ class RagEngine():
         self.index = VectorStoreIndex.from_documents(self.documents)
         self.retriever = VectorIndexRetriever(
             index=self.index,
-            similarity_top_k=3,
+            similarity_top_k=1,
         )
+        self.synth = get_response_synthesizer(streaming=True)
+
 
     def create_context_processor(self,prompt:str):
-
-
+        
         query_engine = RetrieverQueryEngine(
             retriever=self.retriever,
             node_postprocessors=[SimilarityPostprocessor(similarity_cutoff=0.5)],
+            response_synthesizer=self.synth
         )
-        response = query_engine.query(prompt)
-        # reformat response
-        context = "Context:\n"
-        for i in range(self.top_k):
-            context = context + response.source_nodes[i].text + "\n\n"
-        return context
+        response_stream = query_engine.query(prompt)
+        return response_stream
+
 
 
 if __name__ == '__main__':

@@ -15,9 +15,10 @@ const loadDataFromLocalstorage = () => {
     themeButton.innerText = document.body.classList.contains("light-mode") ? "dark_mode" : "light_mode";
 
     const defaultText = `<div class="default-text">
-                            <h1>CodeGen: LLMDriven Coding</h1>
-                            <p>This is a code instruct Model.</p>
-                            <p>If you any query regarding the code,<br>just type the query and you will get the answer</p>
+                            <h1>ChatBot: MOCK LLM BASED RAG </h1>
+                            <h1>[RETRIVEL AUGMENTED GENERATION]</h1>
+                            <p>Using Mock LLM To demonstrate</p>
+                            <p>How RAG Will be used in CHAT BOT To Give Accurate Answer</p><br>
                         </div>`
 
     chatContainer.innerHTML = localStorage.getItem("all-chats") || defaultText;
@@ -73,7 +74,7 @@ const getChatResponse = async (incomingChatDiv) => {
             headers: {'Content-Type': contentType}
         });
         const decoder = new TextDecoder();
-        let result = "";
+        let result = "THE FOLLOWING CONTEXT WILL BE USED \n";
         const reader = readableStreamResponse.body.getReader();
 
         while (true){
